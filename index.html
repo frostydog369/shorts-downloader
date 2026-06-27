@@ -3,462 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>ShortsFast - Free YouTube Shorts Downloader to MP4</title>
-    <meta name="description" content="Download YouTube Shorts videos online in high quality MP4 format instantly. ShortsFast is free, ultra-fast, and requires no registration or software installation.">
-    <meta name="keywords" content="youtube shorts downloader, download youtube shorts, shorts to mp4, youtube shorts download online, free shorts downloader, save youtube shorts">
-    <meta name="robots" content="index, follow">
-    
-    <meta property="og:title" content="ShortsFast - Free YouTube Shorts Downloader to MP4">
-    <meta property="og:description" content="Fast, free, online tool to download and convert YouTube Shorts videos into high-quality MP4 files directly to your device.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="http://localhost:3000">
-
+    <title>ShortsFast - YouTube Shorts Downloader</title>
     <style>
         :root {
-            --dark-bg: #1f1f2e;
-            --header-bg: #11111a;
-            --primary-red: #e50914;
-            --primary-red-hover: #b80710;
-            --success-green: #00b074;
-            --text-dark: #2d3748;
-            --text-muted: #718096;
-            --light-bg: #f7fafc;
+            --primary: #FF0000;
+            --primary-hover: #CC0000;
+            --success: #2ecc71;
+            --success-hover: #27ae60;
+            --dark: #1e1e24;
+            --light: #f4f4f9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: var(--light-bg);
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            color: var(--text-dark);
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
         }
 
-        /* Y2Mate Inspired Premium Header Navigation */
-        .navbar {
-            background-color: var(--header-bg);
-            padding: 15px 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        .navbar__container {
-            max-width: 1000px;
-            margin: 0 auto;
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 1rem 2rem;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-        }
-        .navbar__logo {
-            color: #ffffff;
-            font-size: 24px;
-            font-weight: 800;
-            text-decoration: none;
-            letter-spacing: -0.5px;
-        }
-        .navbar__logo span {
-            color: var(--primary-red);
-        }
-        .navbar__menu a {
-            color: #e2e8f0;
-            text-decoration: none;
-            font-weight: 500;
-            margin-left: 20px;
-            font-size: 14px;
-            transition: color 0.2s;
-        }
-        .navbar__menu a:hover {
-            color: var(--primary-red);
+            align-items: center;
         }
 
-        /* Hero Wrapper Panel */
-        .hero-section {
-            background: linear-gradient(180deg, var(--header-bg) 0%, var(--dark-bg) 100%);
-            padding: 60px 20px;
-            text-align: center;
-            color: #ffffff;
-        }
-        .hero-section h1 {
-            margin: 0 0 12px 0;
-            font-size: 32px;
+        .logo {
             font-weight: 700;
-        }
-        .hero-section p {
-            margin: 0 auto 30px auto;
-            font-size: 16px;
-            color: #a0aec0;
-            max-width: 600px;
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
         }
 
-        /* Converter Form Container Box */
-        form {
-            background-color: #ffffff;
-            max-width: 750px;
+        .container {
+            max-width: 800px;
+            margin: 4rem auto padding;
+            padding: 0 1.5rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .form-container {
+            background: #fff;
+            padding: 2rem;
             border-radius: 12px;
-            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
-            margin: -40px auto 0 auto;
-            padding: 30px;
-            box-sizing: border-box;
-            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            margin-bottom: 3rem;
         }
 
-        .form__title-label {
-            color: var(--text-dark);
-            font-size: 15px;
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+
+        button {
+            padding: 1rem 2rem;
+            background-color: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
             font-weight: 600;
-            margin-bottom: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        #result-zone {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .download-btn {
+            background-color: var(--success);
+            width: 100%;
             display: block;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .download-btn:hover {
+            background-color: var(--success-hover);
+        }
+
+        .error-message {
+            color: var(--primary);
+            margin-top: 1rem;
+            font-weight: 600;
+            display: none;
+        }
+
+        /* Instructions Section Styling */
+        .instructions-section {
+            margin-top: 4rem;
             text-align: left;
         }
 
-        /* Main Input Action Area */
-        .form__input-group {
-            display: flex;
-            gap: 0;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 2px solid #cbd5e0;
-            transition: border-color 0.2s;
-        }
-        .form__input-group:focus-within {
-            border-color: var(--primary-red);
-        }
-        .form__input-group input {
-            color: var(--text-dark);
-            background-color: #ffffff;
-            width: 100%;
-            border: none;
-            padding: 0 16px;
-            height: 54px;
-            font-size: 16px;
-            outline: none;
-            box-sizing: border-box;
-        }
-        .form__input-group button {
-            color: #ffffff;
-            background-color: var(--primary-red);
-            border: none;
-            padding: 0 35px;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            height: 54px;
-            white-space: nowrap;
-        }
-        .form__input-group button:hover {
-            background-color: var(--primary-red-hover);
-        }
-
-        /* Dynamic Engine Status Elements */
-        .form__progress-box {
-            color: var(--text-dark);
-            background-color: #f7fafc;
-            font-size: 16px;
-            height: 54px;
-            border: 2px dashed #cbd5e0;
-            border-radius: 8px;
-            display: none;
-            align-items: center;
-            gap: 12px;
-            box-sizing: border-box;
-            justify-content: center;
-            font-weight: 500;
-        }
-        .form__spinner {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 3px solid rgba(229, 9, 20, 0.1);
-            border-top: 3px solid var(--primary-red);
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .form__error-message {
-            color: var(--primary-red);
-            font-weight: 500;
+        .instructions-section h2 {
             text-align: center;
-            margin-top: 15px;
-            display: none;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
         }
 
-        .form__download-actions {
-            display: none;
-            justify-content: center;
-            gap: 15px;
-        }
-        .form__download-actions button.btn-reset {
-            color: var(--text-dark);
-            background-color: #ffffff;
-            border: 2px solid #cbd5e0;
-            border-radius: 8px;
-            height: 54px;
-            padding: 0 20px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .form__download-actions button.btn-reset:hover {
-            background-color: #edf2f7;
-            border-color: #a0aec0;
-        }
-        .form__download-actions a.btn-download {
-            color: #ffffff;
-            background-color: var(--success-green);
-            border: none;
-            border-radius: 8px;
-            padding: 0 35px;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.2s;
-            height: 54px;
-        }
-        .form__download-actions a.btn-download:hover {
-            opacity: 0.9;
-        }
-
-        /* SEO Informative Text Section Layout */
-        .seo-content {
-            max-width: 750px;
-            margin: 60px auto;
-            padding: 0 20px;
-            box-sizing: border-box;
-        }
-        .seo-content h2 {
-            color: #11111a;
-            font-size: 26px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        .seo-content p {
-            line-height: 1.7;
-            color: var(--text-dark);
-            font-size: 15px;
-            margin-bottom: 20px;
-        }
-        
-        /* Step-by-Step Block Lists */
-        .instruction-grid {
-            margin-top: 30px;
-            padding: 0;
-            list-style: none;
+        .steps-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
         }
-        .instruction-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 24px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+
+        .step-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            position: relative;
         }
-        .instruction-card__step {
-            width: 36px;
-            height: 36px;
-            background-color: rgba(229, 9, 20, 0.1);
-            color: var(--primary-red);
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            margin: 0 auto 15px auto;
-            font-size: 16px;
-        }
-        .instruction-card h3 {
-            font-size: 16px;
-            margin: 0 0 10px 0;
-            color: #11111a;
-        }
-        .instruction-card p {
-            font-size: 13.5px;
-            color: var(--text-muted);
-            margin: 0;
-            line-height: 1.5;
+            font-weight: bold;
+            margin-bottom: 1rem;
         }
 
-        /* Footer Copyright Navigation Panel */
-        .footer {
-            border-top: 1px solid #e2e8f0;
-            padding: 30px 20px;
-            text-align: center;
-            background-color: #ffffff;
-            margin-top: 80px;
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-        .footer__links {
-            margin-bottom: 12px;
-        }
-        .footer__links a {
-            color: var(--text-dark);
-            text-decoration: none;
-            margin: 0 12px;
-        }
-        .footer__links a:hover {
-            color: var(--primary-red);
+        .step-card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
         }
 
-        @media only screen and (max-width: 768px) {
-            .instruction-grid {
-                grid-template-columns: 1fr;
-            }
-            .hero-section h1 { font-size: 26px; }
-            form { margin-left: 15px; margin-right: 15px; padding: 20px; }
+        .step-card p {
+            font-size: 0.95rem;
+            color: #555;
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="navbar__container">
-            <a href="index.html" class="navbar__logo">Shorts<span>Fast</span></a>
-            <div class="navbar__menu">
-                <a href="/">Home</a>
-                <a href="#how-to">How to Download</a>
-                <a href="#features">Features</a>
-            </div>
-        </div>
-    </nav>
-
-    <header class="hero-section">
-        <h1>YouTube Shorts Downloader</h1>
-        <p>Convert and download your favorite YouTube Shorts videos directly into high-quality MP4 files in just one click.</p>
+    <header>
+        <a href="/" class="logo">ShortsFast</a>
     </header>
 
-    <main>
-        <form id="dlForm" autocomplete="off">
-            <label class="form__title-label" for="video">Paste your YouTube Shorts link here:</label>
+    <div class="container">
+        <h1>YouTube Shorts Downloader</h1>
+        <p class="subtitle">Convert and download YouTube Shorts videos for free online</p>
+
+        <div class="form-container">
+            <div class="input-group">
+                <input type="text" id="video-url" placeholder="Paste your YouTube Shorts link here...">
+                <button id="convert-btn" onclick="processVideo()">Convert</button>
+            </div>
             
-            <div class="form__input-group" id="inputState">
-                <input id="video" type="url" placeholder="https://www.youtube.com/shorts/abc123xyz" required autofocus>
-                <button type="submit">Convert</button>
+            <div id="error-block" class="error-message"></div>
+
+            <div id="result-zone">
+                <h3 id="video-title" style="margin-bottom: 0.5rem; text-align: left;"></h3>
+                <button id="download-target" class="download-btn">Download Video File</button>
+                <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                    Note: Links open in a media player tab. Right-click the video player and choose <b>"Save Video As..."</b> to save it.
+                </p>
             </div>
+        </div>
 
-            <div class="form__progress-box" id="loadingState">
-                <span class="form__spinner"></span> Fetching media data streams safely...
-            </div>
-
-            <div class="form__download-actions" id="downloadState">
-                <button type="button" class="btn-reset" id="resetBtn">Convert Another</button>
-                <a href="#" class="btn-download" id="downloadBtn" download target="_blank">Download MP4</a>
-            </div>
-
-            <div class="form__error-message" id="errorState"></div>
-        </form>
-
-        <section class="seo-content" id="how-to">
+        <div class="instructions-section">
             <h2>How to Download YouTube Shorts Videos?</h2>
-            
-            <ol class="instruction-grid">
-                <li class="instruction-card">
-                    <div class="instruction-card__step">1</div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
                     <h3>Copy Video Link</h3>
                     <p>Open the Shorts video on the YouTube app or website and copy its unique URL sharing link.</p>
-                </li>
-                <li class="instruction-card">
-                    <div class="instruction-card__step">2</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
                     <h3>Paste Into Form</h3>
                     <p>Insert the copied link inside the tracking container search field above and hit "Convert".</p>
-                </li>
-                <li class="instruction-card">
-                    <div class="instruction-card__step">3</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
                     <h3>Save Content File</h3>
                     <p>Wait a couple of moments for the process to complete, then tap the green button to download your MP4.</p>
-                </li>
-            </ol>
-
-            <div style="margin-top: 50px;" id="features">
-                <h2>The Ultimate YouTube Shorts to MP4 Downloader</h2>
-                <p><strong>ShortsFast</strong> provides the fastest web service for converting public media into localized offline files. By streaming video packages safely directly through our processing node configuration blocks, users bypass complex scripts, player exceptions, and direct platform limitations cleanly.</p>
-                <p>Our platform is completely web-responsive, allowing you to easily save viral content streams directly onto your desktop computer, Android smartphone, or iPhone device without requiring browser installations or third-party extensions.</p>
+                </div>
             </div>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="footer__links">
-            <a href="#">Contact</a>
-            <a href="#">Copyright Claims</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
         </div>
-        <div>&copy; 2026 ShortsFast. All rights reserved. Free Media Utility.</div>
-    </footer>
+    </div>
 
     <script>
-        const form = document.getElementById('dlForm');
-        const inputState = document.getElementById('inputState');
-        const loadingState = document.getElementById('loadingState');
-        const downloadState = document.getElementById('downloadState');
-        const errorState = document.getElementById('errorState');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const resetBtn = document.getElementById('resetBtn');
+        function processVideo() {
+            const urlInput = document.getElementById('video-url').value;
+            const convertBtn = document.getElementById('convert-btn');
+            const errorBlock = document.getElementById('error-block');
+            const resultZone = document.getElementById('result-zone');
+            const videoTitleText = document.getElementById('video-title');
+            const downloadTarget = document.getElementById('download-target');
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const videoUrl = document.getElementById('video').value;
+            // Reset states
+            errorBlock.style.display = 'none';
+            resultZone.style.display = 'none';
 
-            inputState.style.display = 'none';
-            errorState.style.display = 'none';
-            loadingState.style.display = 'flex';
-
-            try {
-                // LIVE ROUTE PATH: Updated to use dynamic system endpoints relative to host
-                const response = await fetch('/api/download', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url: videoUrl })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) throw new Error(data.error || 'Failed to extract video details.');
-
-                loadingState.style.display = 'none';
-                downloadState.style.display = 'flex';
-                
-                // LIVE STREAM PATH: Updated relative download hook parameters
-                downloadBtn.href = `/api/stream?id=${data.videoId}`;
-
-            } catch (err) {
-                loadingState.style.display = 'none';
-                inputState.style.display = 'flex';
-                errorState.innerText = err.message;
-                errorState.style.display = 'block';
+            if (!urlInput) {
+                errorBlock.innerText = 'Please enter a valid URL.';
+                errorBlock.style.display = 'block';
+                return;
             }
-        });
 
-        resetBtn.addEventListener('click', () => {
-            downloadState.style.display = 'none';
-            inputState.style.display = 'flex';
-            document.getElementById('video').value = '';
-        });
+            convertBtn.innerText = 'Processing...';
+            convertBtn.disabled = true;
 
-        // Disable right-click everywhere EXCEPT on the video URL input box
-        document.addEventListener('contextmenu', (e) => {
-            if (e.target.id === 'video') {
-                return; // Allow right-click so they can paste!
-            }
-            e.preventDefault(); // Block it everywhere else
-        });
+            fetch('/api/download', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: urlInput })
+            })
+            .then(res => {
+                if (!res.ok) throw new Error();
+                return res.json();
+            })
+            .then(data => {
+                convertBtn.innerText = 'Convert';
+                convertBtn.disabled = false;
 
-        // Disable shortcut keys to open Developer Tools
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'F12') {
-                e.preventDefault();
-            }
-            if (e.ctrlKey && (e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase()) || e.key.toUpperCase() === 'U')) {
-                e.preventDefault();
-            }
-        });
+                if (data.success && data.streamUrl) {
+                    videoTitleText.innerText = data.title;
+                    
+                    // FIXED STRATEGY: Directly opens the secure video streaming media link in a new tab
+                    downloadTarget.onclick = function() {
+                        window.open(data.streamUrl, '_blank');
+                    };
+
+                    resultZone.style.display = 'block';
+                } else {
+                    throw new Error();
+                }
+            })
+            .catch(() => {
+                convertBtn.innerText = 'Convert';
+                convertBtn.disabled = false;
+                errorBlock.innerText = 'Failed to extract video streams. Ensure the link is a valid public Short.';
+                errorBlock.style.display = 'block';
+            });
+        }
     </script>
 </body>
 </html>
