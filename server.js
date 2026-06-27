@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-// FIXED: Import the core module directly (it handles its own binary paths automatically on Render)
+// Import the core module directly (it handles its own binary paths automatically on Render)
 const ytdlp = require('youtube-dl-exec');
 
 const app = express();
@@ -28,11 +28,13 @@ app.post('/api/download', async (req, res) => {
     }
 
     try {
-        // FIXED: Fetch metadata safely using the clean module wrapper
+        // FIXED: Added User-Agent and Referer to bypass YouTube's data center blocks
         const metadata = await ytdlp(url, {
             dumpSingleJson: true,
             noWarnings: true,
             preferFreeFormats: true,
+            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            referer: 'https://www.youtube.com/'
         });
 
         // Parse structural parameters safely (handles both stringified and object responses)
@@ -68,11 +70,13 @@ app.get('/api/stream', (req, res) => {
     res.setHeader('Content-Disposition', `attachment; filename="ShortsFast-${videoId}.mp4"`);
     res.setHeader('Content-Type', 'video/mp4');
 
-    // Spawn processing worker to stream real-time buffers cleanly directly to response pipe
+    // FIXED: Added identical browser spoofing flags to the streaming execution line
     const downloaderProcess = ytdlp.exec(videoUrl, {
         format: 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
         output: '-',
-        noWarnings: true
+        noWarnings: true,
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        referer: 'https://www.youtube.com/'
     });
 
     // Pipe layout processing stream directly into client terminal browser response frame
