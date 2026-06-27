@@ -8,12 +8,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Serve the frontend landing page
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // =======================================================
-// API ROUTE: Fetch Video Details (Ultra-Lightweight Text Layer)
+// API ROUTE: Fetch Direct Streaming URL for Browser Player
 // =======================================================
 app.post('/api/download', async (req, res) => {
     const { url } = req.body;
@@ -24,7 +25,7 @@ app.post('/api/download', async (req, res) => {
 
     let videoId = '';
     
-    // Instantly extract the 11-character video ID from the URL string text
+    // Extract the 11-character video ID from the URL string
     if (url.includes('shorts/')) {
         videoId = url.split('shorts/')[1]?.split('?')[0]?.split('&')[0];
     } else if (url.includes('v=')) {
@@ -34,53 +35,43 @@ app.post('/api/download', async (req, res) => {
     }
 
     if (!videoId || videoId.length !== 11) {
-        return res.status(400).json({ error: 'Could not extract a valid YouTube Video ID.' });
-    }
-
-    // Instantly send back success to open up the frontend green button layout
-    res.json({
-        success: true,
-        videoId: videoId,
-        title: 'YouTube Shorts Video'
-    });
-});
-
-// =======================================================
-// API ROUTE: Safe Native JavaScript Streaming Pipe
-// =======================================================
-app.get('/api/stream', async (req, res) => {
-    const videoId = req.query.id;
-
-    if (!videoId) {
-        return res.status(400).send('Missing video target identifier.');
+        return res.status(400).json({ error: 'Could not extract a valid YouTube Video ID. Ensure the link is correct.' });
     }
 
     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
-    // Set download attachment headers
-    res.setHeader('Content-Disposition', `attachment; filename="ShortsFast-${videoId}.mp4"`);
-    res.setHeader('Content-Type', 'video/mp4');
-
     try {
-        // Stream natively using pure JavaScript streams without spawning heavy Linux binaries
-        // This keeps RAM usage incredibly low to prevent Render server memory crashes
-        ytdl(videoUrl, {
-            format: 'mp4',
-            quality: 'highestvideo',
+        // Fetch streaming signatures using native client mock headers
+        const info = await ytdl.getInfo(videoUrl, {
             requestOptions: {
                 headers: {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
                 }
             }
-        }).pipe(res);
+        });
 
-    } catch (streamError) {
-        console.error('Native Stream Error:', streamError.message);
-        if (!res.headersSent) {
-            res.status(500).send('Backend engine interface failed.');
+        // Isolate a unified MP4 stream format containing combined video and audio tracks
+        const format = ytdl.chooseFormat(info.formats, { 
+            filter: 'audioandvideo', 
+            quality: 'highestvideo' 
+        });
+
+        if (format && format.url) {
+            // Send the raw stream URL back to the frontend
+            return res.json({
+                success: true,
+                streamUrl: format.url,
+                title: info.videoDetails.title || 'YouTube Short'
+            });
+        } else {
+            throw new Error('No compatible browser formats found.');
         }
+
+    } catch (error) {
+        console.error('Link Extraction Failure:', error.message);
+        res.status(500).json({ error: 'Failed to extract video streams. Please verify the link or try another one.' });
     }
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Stable backend running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Stable streaming router running on port ${PORT}`));
