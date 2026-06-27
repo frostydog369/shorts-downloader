@@ -2,11 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const ytdlp = require('youtube-dl-exec');
+const fs = require('fs');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+const cookiesPath = path.resolve(__dirname, 'cookies.txt');
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -23,16 +26,21 @@ app.post('/api/download', async (req, res) => {
     }
 
     try {
-        // FIXED: Changed 'cookiefile' to the library's correct 'cookies' configuration property
-        const metadata = await ytdlp(url, {
+        const options = {
             dumpSingleJson: true,
             noWarnings: true,
             preferFreeFormats: true,
-            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            referer: 'https://www.youtube.com/',
-            cookies: path.join(__dirname, 'cookies.txt')
-        });
+            noCheckCertificates: true, // Bypasses SSL strict blocks
+            youtubeSkipDashManifest: true, // Speeds up and prevents bot flags
+            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+            referer: 'https://www.youtube.com/'
+        };
 
+        if (fs.existsSync(cookiesPath)) {
+            options.cookies = cookiesPath;
+        }
+
+        const metadata = await ytdlp(url, options);
         const parsedData = typeof metadata === 'string' ? JSON.parse(metadata) : metadata;
         
         if (!parsedData.id) throw new Error('Could not resolve video tracking layout identifiers.');
@@ -64,16 +72,20 @@ app.get('/api/stream', (req, res) => {
     res.setHeader('Content-Disposition', `attachment; filename="ShortsFast-${videoId}.mp4"`);
     res.setHeader('Content-Type', 'video/mp4');
 
-    // FIXED: Changed 'cookiefile' to 'cookies' here as well
-    const downloaderProcess = ytdlp.exec(videoUrl, {
-        format: 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+    const streamOptions = {
+        format: 'best', // Swapped to a simplified universal format stream to bypass extraction blocks
         output: '-',
         noWarnings: true,
-        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        referer: 'https://www.youtube.com/',
-        cookies: path.join(__dirname, 'cookies.txt')
-    });
+        noCheckCertificates: true,
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+        referer: 'https://www.youtube.com/'
+    };
 
+    if (fs.existsSync(cookiesPath)) {
+        streamOptions.cookies = cookiesPath;
+    }
+
+    const downloaderProcess = ytdlp.exec(videoUrl, streamOptions);
     downloaderProcess.stdout.pipe(res);
 
     downloaderProcess.on('error', (err) => {
