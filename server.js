@@ -9,7 +9,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Define absolute path to cookies.txt
 const cookiesPath = path.resolve(__dirname, 'cookies.txt');
+
+// Startup check: verifies the visibility of your cookies file on the Render server environment
+if (fs.existsSync(cookiesPath)) {
+    console.log(`[SUCCESS] cookies.txt found at: ${cookiesPath}`);
+} else {
+    console.error(`[WARNING] cookies.txt NOT found at: ${cookiesPath}`);
+}
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -30,12 +38,13 @@ app.post('/api/download', async (req, res) => {
             dumpSingleJson: true,
             noWarnings: true,
             preferFreeFormats: true,
-            noCheckCertificates: true, // Bypasses SSL strict blocks
-            youtubeSkipDashManifest: true, // Speeds up and prevents bot flags
+            noCheckCertificates: true,      // Bypasses local SSL checking issues
+            youtubeSkipDashManifest: true,  // Speeds up parsing and reduces bot-trigger metrics
             userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
             referer: 'https://www.youtube.com/'
         };
 
+        // Inject the verified cookie file path if it exists
         if (fs.existsSync(cookiesPath)) {
             options.cookies = cookiesPath;
         }
@@ -73,7 +82,8 @@ app.get('/api/stream', (req, res) => {
     res.setHeader('Content-Type', 'video/mp4');
 
     const streamOptions = {
-        format: 'best', // Swapped to a simplified universal format stream to bypass extraction blocks
+        // FIXED: Universal single-stream format selection to bypass multi-part handshake failures on cloud links
+        format: 'mp4', 
         output: '-',
         noWarnings: true,
         noCheckCertificates: true,
