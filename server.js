@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const ytdlp = require('youtube-dl-exec');
+const { exec } = require('child_process');
 
 const app = express();
 
@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 });
 
 // =======================================================
-// API ROUTE: Fetch Video Details
+// API ROUTE: Fetch Video Details (Zero-Handshake Method)
 // =======================================================
 app.post('/api/download', async (req, res) => {
     const { url } = req.body;
@@ -22,50 +22,28 @@ app.post('/api/download', async (req, res) => {
         return res.status(400).json({ error: 'Please provide a valid YouTube Shorts URL.' });
     }
 
-    // Clean up the URL format to handle clean standard lookups
-    let cleanUrl = url.trim();
-    if (cleanUrl.includes('shorts/')) {
-        const videoId = cleanUrl.split('shorts/')[1]?.split('?')[0];
-        if (videoId) cleanUrl = `https://www.youtube.com/watch?v=${videoId}`;
+    let videoId = '';
+    
+    // Cleanly isolate the 11-character video ID entirely on the backend text layer
+    if (url.includes('shorts/')) {
+        videoId = url.split('shorts/')[1]?.split('?')[0]?.split('&')[0];
+    } else if (url.includes('v=')) {
+        videoId = url.split('v=')[1]?.split('&')[0];
+    } else if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1]?.split('?')[0];
     }
 
-    try {
-        // Universal direct fetching options that don't trigger account location verification flags
-        const metadata = await ytdlp(cleanUrl, {
-            dumpSingleJson: true,
-            noWarnings: true,
-            noCheckCertificates: true,
-            preferFreeFormats: true,
-            youtubeSkipDashManifest: true,
-            // Uses a clean web crawler identity instead of a standard browser proxy simulation
-            addHeader: ['referer:youtube.com', 'user-agent:googlebot']
-        });
-
-        const parsedData = typeof metadata === 'string' ? JSON.parse(metadata) : metadata;
-        
-        if (!parsedData.id) throw new Error('Missing tracking layout identifiers.');
-
-        res.json({
-            success: true,
-            videoId: parsedData.id,
-            title: parsedData.title || 'YouTube Short Video'
-        });
-
-    } catch (error) {
-        console.error('Extraction Error:', error.message);
-        // Fallback layout: If extraction fails due to server location restrictions, bypass it by passing parameters blindly
-        if (cleanUrl.includes('v=')) {
-            const fallbackId = cleanUrl.split('v=')[1]?.split('&')[0];
-            if (fallbackId) {
-                return res.json({
-                    success: true,
-                    videoId: fallbackId,
-                    title: 'YouTube Short'
-                });
-            }
-        }
-        res.status(500).json({ error: 'Failed to extract video streams. Ensure the link is a valid public Short.' });
+    if (!videoId || videoId.length !== 11) {
+        return res.status(400).json({ error: 'Could not extract a valid YouTube Video ID.' });
     }
+
+    // Instantly return the structured token layout back to the frontend
+    // This entirely avoids hitting YouTube's network during the initial check phase
+    res.json({
+        success: true,
+        videoId: videoId,
+        title: 'YouTube Shorts Video'
+    });
 });
 
 // =======================================================
@@ -75,7 +53,7 @@ app.get('/api/stream', (req, res) => {
     const videoId = req.query.id;
 
     if (!videoId) {
-        return res.status(400).send('Missing video target identifier blocks.');
+        return res.status(400).send('Missing video target identifier.');
     }
 
     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
@@ -83,18 +61,21 @@ app.get('/api/stream', (req, res) => {
     res.setHeader('Content-Disposition', `attachment; filename="ShortsFast-${videoId}.mp4"`);
     res.setHeader('Content-Type', 'video/mp4');
 
-    const downloaderProcess = ytdlp.exec(videoUrl, {
-        format: 'mp4', // Forces a universal flat stream configuration 
-        output: '-',
-        noWarnings: true,
-        noCheckCertificates: true,
-        addHeader: ['referer:youtube.com', 'user-agent:googlebot']
+    // Execute via direct shell spawning using an Android client emulation flag
+    // The 'android' extractor profile bypasses standard data center fingerprint signatures entirely
+    const command = `npx youtube-dl-exec "${videoUrl}" --format "best[ext=mp4]" --extractor-args "youtube:player_client=android" --output "-" --no-warnings --no-check-certificates`;
+
+    const child = exec(command, { maxBuffer: 1024 * 1024 * 10 });
+
+    // Stream the data directly to the client's browser response
+    child.stdout.pipe(res);
+
+    child.stderr.on('data', (data) => {
+        console.error(`Streaming Process Output: ${data}`);
     });
 
-    downloaderProcess.stdout.pipe(res);
-
-    downloaderProcess.on('error', (err) => {
-        console.error('Streaming connection interrupted:', err.message);
+    child.on('error', (err) => {
+        console.error('Streaming connection pipeline failed:', err.message);
         if (!res.headersSent) {
             res.status(500).send('Media synchronization pipeline failed.');
         }
