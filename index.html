@@ -4,17 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Primary SEO Metadata -->
     <title>ShortsFast - YouTube Shorts Downloader (High Quality MP4)</title>
     <meta name="description" content="Download YouTube Shorts videos online for free in high quality MP4 format. Fast, safe, and mobile-friendly YouTube Shorts downloader. No installation required.">
     <meta name="keywords" content="youtube shorts downloader, download youtube shorts, youtube shorts to mp4, shortsfast, save youtube shorts, free shorts downloader, online video downloader">
     <meta name="robots" content="index, follow">
-
-    <!-- Open Graph / Social Metadata -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://shorts-downloader-3r1l.onrender.com/">
-    <meta property="og:title" content="ShortsFast - Free YouTube Shorts Downloader">
-    <meta property="og:description" content="Convert and download your favorite YouTube Shorts instantly in high-quality MP4 format. Fast, free, and completely secure.">
 
     <style>
         :root {
@@ -160,7 +153,8 @@
         .download-action-trigger {
             background-color: var(--success-green);
             color: #FFFFFF;
-            border: none;
+            text-decoration: none;
+            display: inline-block;
             padding: 0.9rem 2rem;
             font-size: 1.1rem;
             font-weight: bold;
@@ -271,7 +265,6 @@
 </head>
 <body>
 
-    <!-- Dark Upper Navigation Section -->
     <div class="top-banner-bg">
         <header class="header-nav">
             <a href="/" class="logo">Shorts<span>Fast</span></a>
@@ -284,7 +277,6 @@
         </header>
     </div>
 
-    <!-- Centered Box Content Module -->
     <main class="main-content">
         <div class="converter-card">
             <div class="card-label">Paste your YouTube link</div>
@@ -296,11 +288,10 @@
             <div id="error-message-block" class="error-message-block"></div>
 
             <div id="result-display">
-                <button id="download-action-btn" class="download-action-trigger">Download MP4</button>
+                <a id="download-action-btn" class="download-action-trigger" href="#" download>Download MP4</a>
             </div>
         </div>
 
-        <!-- Styled Plain-Text Descriptions Layer -->
         <div class="text-info-section">
             <h1>YouTube to MP4 Shorts Downloader</h1>
             <p>ShortsFast is an online YouTube Shorts downloader tool that allows you to extract and download high-quality YouTube clips as MP4 files. Our converter platform is free to use and does not require any registrations, software installation, or accounts. ShortsFast is optimized to run smoothly across all modern web browsers and mobile ecosystems. By using our service, you accept our <a href="#">Terms of Use</a>.</p>
@@ -318,7 +309,6 @@
         </div>
     </main>
 
-    <!-- Footer System Paths -->
     <footer>
         <div class="footer-links">
             <a href="#">Contact</a>
@@ -328,7 +318,6 @@
         </div>
     </footer>
 
-    <!-- Safe Background Binary Fetch Script Engine -->
     <script>
         function processConversionRequest() {
             const inputField = document.getElementById('target-link-input').value;
@@ -362,34 +351,9 @@
                 actionBtn.innerText = 'Convert';
                 actionBtn.disabled = false;
 
-                if (data.success && data.streamUrl) {
-                    downloadActionBtn.innerText = "Download MP4";
-                    
-                    // Native JavaScript Blob injection handles saving the file directly to your drive
-                    downloadActionBtn.onclick = async function(e) {
-                        e.preventDefault();
-                        downloadActionBtn.innerText = "Saving to Device...";
-                        
-                        try {
-                            const response = await fetch(data.streamUrl);
-                            const blob = await response.blob();
-                            const blobUrl = window.URL.createObjectURL(blob);
-                            const hiddenAnchor = document.createElement('a');
-                            
-                            hiddenAnchor.href = blobUrl;
-                            hiddenAnchor.download = `ShortsFast_${Date.now()}.mp4`;
-                            document.body.appendChild(hiddenAnchor);
-                            hiddenAnchor.click();
-                            
-                            document.body.removeChild(hiddenAnchor);
-                            window.URL.revokeObjectURL(blobUrl);
-                        } catch (err) {
-                            window.open(data.streamUrl, '_blank');
-                        } finally {
-                            downloadActionBtn.innerText = "Download MP4";
-                        }
-                    };
-
+                if (data.success && data.videoId) {
+                    // Update download button properties to point directly to our proxy streaming path
+                    downloadActionBtn.href = `/api/stream?id=${data.videoId}`;
                     resultDisplay.style.display = 'block';
                 } else {
                     throw new Error();
