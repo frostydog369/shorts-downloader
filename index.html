@@ -4,394 +4,345 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>ShortsFast - Free YouTube Shorts Downloader (High Quality MP4)</title>
+    <!-- Primary SEO Metadata -->
+    <title>ShortsFast - YouTube Shorts Downloader (High Quality MP4)</title>
     <meta name="description" content="Download YouTube Shorts videos online for free in high quality MP4 format. Fast, safe, and mobile-friendly YouTube Shorts downloader. No installation required.">
     <meta name="keywords" content="youtube shorts downloader, download youtube shorts, youtube shorts to mp4, shortsfast, save youtube shorts, free shorts downloader, online video downloader">
     <meta name="robots" content="index, follow">
-    <meta name="language" content="English">
-    <meta name="author" content="ShortsFast">
 
+    <!-- Open Graph / Social Metadata -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://shorts-downloader-3r1l.onrender.com/">
     <meta property="og:title" content="ShortsFast - Free YouTube Shorts Downloader">
     <meta property="og:description" content="Convert and download your favorite YouTube Shorts instantly in high-quality MP4 format. Fast, free, and completely secure.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=1200&h=630&fit=crop">
-
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://shorts-downloader-3r1l.onrender.com/">
-    <meta property="twitter:title" content="ShortsFast - Free YouTube Shorts Downloader">
-    <meta property="twitter:description" content="Convert and download your favorite YouTube Shorts instantly in high-quality MP4 format. Fast, free, and completely secure.">
-    <meta property="twitter:image" content="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=1200&h=630&fit=crop">
 
     <style>
         :root {
-            --accent: #FF0033;
-            --accent-hover: #CC0029;
-            --success: #00FF66;
-            --success-hover: #00CC52;
-            --bg-dark: #0A0A0F;
-            --card-dark: #12121A;
-            --border-color: #222230;
-            --text-main: #FFFFFF;
-            --text-muted: #8F8F9E;
+            --primary-red: #E52D27;
+            --primary-red-hover: #B31E19;
+            --success-green: #2ecc71;
+            --success-green-hover: #27ae60;
+            --bg-light: #FFFFFF;
+            --text-dark: #333333;
+            --text-muted: #666666;
+            --border-gray: #CCCCCC;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            align-items: center;
         }
 
-        /* Centered Professional Header Navigation */
-        header {
+        /* Top Dark Brand Banner Section */
+        .top-banner-bg {
+            background-color: #111111;
             width: 100%;
-            max-width: 1200px;
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: center;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .logo {
-            font-weight: 800;
-            font-size: 1.75rem;
-            color: var(--text-main);
-            text-decoration: none;
-            letter-spacing: -0.05em;
-            transition: color 0.2s;
-        }
-
-        .logo span {
-            color: var(--accent);
-        }
-
-        .logo:hover {
-            color: var(--accent);
-        }
-
-        /* Fully Centered Main Core Container Layout */
-        .main-wrapper {
-            flex: 1;
-            width: 100%;
-            max-width: 800px;
-            padding: 3rem 1.5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            padding: 1.5rem 0 6rem 0;
             text-align: center;
         }
 
-        h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            margin-bottom: 0.75rem;
-            line-height: 1.1;
-        }
-
-        h1 span {
-            color: var(--accent);
-        }
-
-        .subtitle {
-            font-size: 1.15rem;
-            color: var(--text-muted);
-            margin-bottom: 2.5rem;
-            max-width: 600px;
-        }
-
-        /* Centered Processing Module Frame */
-        .converter-box {
-            background: var(--card-dark);
-            border: 1px solid var(--border-color);
-            padding: 2.5rem;
-            border-radius: 16px;
-            width: 100%;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            margin-bottom: 4rem;
-        }
-
-        .input-wrapper {
+        .header-nav {
+            max-width: 850px;
+            margin: 0 auto 2rem auto;
             display: flex;
-            gap: 0.75rem;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .logo span {
+            color: var(--primary-red);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.25rem;
+        }
+
+        .nav-links a {
+            color: #BBBBBB;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover {
+            color: #FFFFFF;
+            text-decoration: underline;
+        }
+
+        /* Centered Main White Input Box Layer */
+        .main-content {
+            max-width: 850px;
             width: 100%;
+            margin: -4.5rem auto 3rem auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .converter-card {
+            background: #FFFFFF;
+            padding: 2.5rem 2rem;
+            border-radius: 6px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            border: 1px solid #EFEFEF;
+            text-align: left;
+            margin-bottom: 2.5rem;
+        }
+
+        .card-label {
+            font-size: 1.05rem;
+            font-weight: bold;
+            margin-bottom: 0.75rem;
+            color: #111111;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 0px;
+            border: 1px solid var(--border-gray);
+            border-radius: 4px;
+            overflow: hidden;
         }
 
         input[type="text"] {
             flex: 1;
-            padding: 1.1rem 1.5rem;
-            background-color: #050507;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
+            padding: 0.9rem 1.2rem;
+            border: none;
             font-size: 1rem;
-            color: var(--text-main);
             outline: none;
-            transition: all 0.2s;
         }
 
-        input[type="text"]:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(255, 0, 51, 0.2);
-        }
-
-        button.action-btn {
-            padding: 1.1rem 2.2rem;
-            background-color: var(--accent);
-            color: #fff;
+        .convert-btn {
+            background-color: var(--primary-red);
+            color: #FFFFFF;
             border: none;
-            border-radius: 10px;
+            padding: 0 2.5rem;
             font-size: 1rem;
-            font-weight: 700;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background-color 0.2s;
         }
 
-        button.action-btn:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-1px);
+        .convert-btn:hover {
+            background-color: var(--primary-red-hover);
         }
 
-        button.action-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Result Panel Components */
-        #result-panel {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border-color);
+        /* Result Download Presentation Layout */
+        #result-display {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #EEEEEE;
             display: none;
-        }
-
-        .download-trigger {
-            background-color: var(--success);
-            color: #000000 !important;
-            width: 100%;
-            display: block;
             text-align: center;
-            text-decoration: none;
-            padding: 1.1rem;
-            border-radius: 10px;
-            font-weight: 800;
-            font-size: 1.25rem;
-            cursor: pointer;
+        }
+
+        .download-action-trigger {
+            background-color: var(--success-green);
+            color: #FFFFFF;
             border: none;
-            transition: all 0.2s;
+            padding: 0.9rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            transition: background-color 0.2s;
+            margin-bottom: 0.5rem;
         }
 
-        .download-trigger:hover {
-            background-color: var(--success-hover);
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
+        .download-action-trigger:hover {
+            background-color: var(--success-green-hover);
         }
 
-        .info-note {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 0.75rem;
-        }
-
-        .error-banner {
-            color: var(--accent);
-            margin-top: 1.25rem;
-            font-weight: 600;
+        .error-message-block {
+            color: var(--primary-red);
+            margin-top: 1rem;
+            font-weight: bold;
             font-size: 0.95rem;
             display: none;
         }
 
-        /* Premium Tools Description Layout */
-        .features-dashboard {
-            width: 100%;
-            margin-bottom: 4rem;
-        }
-
-        .features-dashboard h2 {
-            font-size: 1.75rem;
-            margin-bottom: 2rem;
-            font-weight: 800;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            width: 100%;
-        }
-
-        .feature-card {
-            background: var(--card-dark);
-            border: 1px solid var(--border-color);
-            padding: 2rem 1.5rem;
-            border-radius: 12px;
+        /* Clean Minimalist Text & FAQ Sections */
+        .text-info-section {
             text-align: left;
+            margin-top: 2rem;
         }
 
-        .feature-icon {
-            font-size: 1.5rem;
-            color: var(--accent);
-            margin-bottom: 0.75rem;
+        .text-info-section h1, .text-info-section h2 {
+            font-size: 1.45rem;
+            color: #222222;
+            margin-bottom: 1rem;
+            font-weight: bold;
         }
 
-        .feature-card h3 {
-            font-size: 1.15rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
+        .text-info-section h2 {
+            margin-top: 2rem;
+            font-size: 1.25rem;
         }
 
-        .feature-card p {
-            font-size: 0.9rem;
+        .text-info-section p {
             color: var(--text-muted);
-            line-height: 1.5;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            text-align: justify;
         }
 
-        /* Instructions Workflow Area */
-        .workflow-container {
-            width: 100%;
-            border-top: 1px solid var(--border-color);
-            padding-top: 4rem;
+        .text-info-section a {
+            color: var(--primary-red);
+            text-decoration: none;
         }
 
-        .workflow-container h2 {
-            font-size: 1.75rem;
-            margin-bottom: 2.5rem;
+        .text-info-section a:hover {
+            text-decoration: underline;
         }
 
-        .steps-wrapper {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 2rem;
-            width: 100%;
+        .steps-list {
+            list-style-type: none;
+            padding-left: 0;
         }
 
-        .step-node {
-            background: #0d0d14;
-            border: 1px solid var(--border-color);
-            padding: 2rem 1.5rem;
-            border-radius: 12px;
+        .steps-list li {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
             position: relative;
+            padding-left: 1.5rem;
         }
 
-        .step-badge {
-            background: var(--accent);
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
+        .steps-list li::before {
+            content: attr(data-step) ".";
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-weight: bold;
+            color: #222222;
+        }
+
+        /* Footer Utilities Navigation */
+        footer {
+            border-top: 1px solid #E5E5E5;
+            padding: 2rem 0;
+            text-align: center;
             font-size: 0.85rem;
-            margin-bottom: 1.25rem;
-        }
-
-        .step-node h3 {
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-
-        .step-node p {
-            font-size: 0.9rem;
             color: var(--text-muted);
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-dark);
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <a href="/" class="logo">Shorts<span>Fast</span></a>
-    </header>
-
-    <div class="main-wrapper">
-        <h1>Fast & Safe <span>Shorts</span> Downloader</h1>
-        <p class="subtitle">Convert and extract YouTube Shorts instantly using localized browser injection formats.</p>
-
-        <div class="converter-box">
-            <div class="input-wrapper">
-                <input type="text" id="target-url" placeholder="Paste your target YouTube Shorts URL link here...">
-                <button id="exec-btn" class="action-btn" onclick="executeConversion()">Convert</button>
-            </div>
-            
-            <div id="error-display" class="error-banner"></div>
-
-            <div id="result-panel">
-                <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--text-muted);">Conversion Matrix Loaded Successfully</h3>
-                <button id="download-anchor" class="download-trigger">Download Video File</button>
-                <p class="info-note">
-                    Note: Links deploy inside the browser safe-media layout player. Simply right-click on the active player panel and select <b>"Save Video As..."</b> to download the video file to your drive.
-                </p>
-            </div>
-        </div>
-
-        <div class="features-dashboard">
-            <h2>Professional Toolkit Capabilities</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Zero-Lag Parsing</h3>
-                    <p>Bypasses traditional back-end file rendering bottlenecks to process and strip source tracking tokens in under 100 milliseconds.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3>Sandbox Secure</h3>
-                    <p>No account logins or cookie files required. Extraction runs safely inside a secure network wrapper layer protecting user data integrity.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📱</div>
-                    <h3>Cross-Platform Output</h3>
-                    <p>Generates high-compatibility layout configurations designed to download and stream cleanly onto PC, Mac, Android, and iOS formats.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="workflow-container">
-            <h2>How to Download YouTube Shorts Videos?</h2>
-            <div class="steps-wrapper">
-                <div class="step-node">
-                    <div class="step-badge">1</div>
-                    <h3>Copy Video Link</h3>
-                    <p>Open the Shorts video on the YouTube app or website and copy its unique URL sharing link.</p>
-                </div>
-                <div class="step-node">
-                    <div class="step-badge">2</div>
-                    <h3>Paste Into Form</h3>
-                    <p>Insert the copied link inside the tracking container search field above and hit "Convert".</p>
-                </div>
-                <div class="step-node">
-                    <div class="step-badge">3</div>
-                    <h3>Save Content File</h3>
-                    <p>Wait a couple of moments for the process to complete, then tap the green button to download your MP4.</p>
-                </div>
-            </div>
-        </div>
+    <!-- Dark Upper Navigation Section -->
+    <div class="top-banner-bg">
+        <header class="header-nav">
+            <a href="/" class="logo">Shorts<span>Fast</span></a>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <a href="#">FAQ</a>
+                <a href="#">Add-On</a>
+                <a href="#">Bookmarklet</a>
+            </nav>
+        </header>
     </div>
 
-    <script>
-        function executeConversion() {
-            const inputField = document.getElementById('target-url').value;
-            const actionBtn = document.getElementById('exec-btn');
-            const errorDisplay = document.getElementById('error-display');
-            const resultPanel = document.getElementById('result-panel');
-            const downloadAnchor = document.getElementById('download-anchor');
+    <!-- Centered Box Content Module -->
+    <main class="main-content">
+        <div class="converter-card">
+            <div class="card-label">Paste your YouTube link</div>
+            <div class="search-row">
+                <input type="text" id="target-link-input" placeholder="youtube.com/shorts/videoID">
+                <button id="convert-submit-btn" class="convert-btn" onclick="processConversionRequest()">Convert</button>
+            </div>
 
-            errorDisplay.style.display = 'none';
-            resultPanel.style.display = 'none';
+            <div id="error-message-block" class="error-message-block"></div>
+
+            <div id="result-display">
+                <button id="download-action-btn" class="download-action-trigger">Download MP4</button>
+            </div>
+        </div>
+
+        <!-- Styled Plain-Text Descriptions Layer -->
+        <div class="text-info-section">
+            <h1>YouTube to MP4 Shorts Downloader</h1>
+            <p>ShortsFast is an online YouTube Shorts downloader tool that allows you to extract and download high-quality YouTube clips as MP4 files. Our converter platform is free to use and does not require any registrations, software installation, or accounts. ShortsFast is optimized to run smoothly across all modern web browsers and mobile ecosystems. By using our service, you accept our <a href="#">Terms of Use</a>.</p>
+
+            <h2>How to download a YouTube video</h2>
+            <ol class="steps-list">
+                <li data-step="1">Go to YouTube and find a video you would like to download.</li>
+                <li data-step="2">Copy the video link.</li>
+                <li data-step="3">Paste the video link into our converter above.</li>
+                <li data-step="4">Click the Convert button.</li>
+                <li data-step="5">The system will instantly process your video request parameters.</li>
+                <li data-step="6">Once verification finishes, click the green download button to directly save the file to your machine.</li>
+            </ol>
+            <p style="margin-top: 1.5rem;">Thank you for using our YouTube Shorts Downloader tool.</p>
+        </div>
+    </main>
+
+    <!-- Footer System Paths -->
+    <footer>
+        <div class="footer-links">
+            <a href="#">Contact</a>
+            <a href="#">Copyright Claims</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">ToU</a>
+        </div>
+    </footer>
+
+    <!-- Safe Background Binary Fetch Script Engine -->
+    <script>
+        function processConversionRequest() {
+            const inputField = document.getElementById('target-link-input').value;
+            const actionBtn = document.getElementById('convert-submit-btn');
+            const errorBlock = document.getElementById('error-message-block');
+            const resultDisplay = document.getElementById('result-display');
+            const downloadActionBtn = document.getElementById('download-action-btn');
+
+            errorBlock.style.display = 'none';
+            resultDisplay.style.display = 'none';
 
             if (!inputField.trim()) {
-                errorDisplay.innerText = 'Error: Please input a valid target processing URL link.';
-                errorDisplay.style.display = 'block';
+                errorBlock.innerText = 'Error: Please insert a valid link address.';
+                errorBlock.style.display = 'block';
                 return;
             }
 
@@ -412,11 +363,34 @@
                 actionBtn.disabled = false;
 
                 if (data.success && data.streamUrl) {
-                    // Injecting client navigation parameter triggers
-                    downloadAnchor.onclick = function() {
-                        window.open(data.streamUrl, '_blank');
+                    downloadActionBtn.innerText = "Download MP4";
+                    
+                    // Native JavaScript Blob injection handles saving the file directly to your drive
+                    downloadActionBtn.onclick = async function(e) {
+                        e.preventDefault();
+                        downloadActionBtn.innerText = "Saving to Device...";
+                        
+                        try {
+                            const response = await fetch(data.streamUrl);
+                            const blob = await response.blob();
+                            const blobUrl = window.URL.createObjectURL(blob);
+                            const hiddenAnchor = document.createElement('a');
+                            
+                            hiddenAnchor.href = blobUrl;
+                            hiddenAnchor.download = `ShortsFast_${Date.now()}.mp4`;
+                            document.body.appendChild(hiddenAnchor);
+                            hiddenAnchor.click();
+                            
+                            document.body.removeChild(hiddenAnchor);
+                            window.URL.revokeObjectURL(blobUrl);
+                        } catch (err) {
+                            window.open(data.streamUrl, '_blank');
+                        } finally {
+                            downloadActionBtn.innerText = "Download MP4";
+                        }
                     };
-                    resultPanel.style.display = 'block';
+
+                    resultDisplay.style.display = 'block';
                 } else {
                     throw new Error();
                 }
@@ -424,8 +398,8 @@
             .catch(() => {
                 actionBtn.innerText = 'Convert';
                 actionBtn.disabled = false;
-                errorDisplay.innerText = 'Failed to extract video streams. Ensure the link is a valid public Short.';
-                errorDisplay.style.display = 'block';
+                errorBlock.innerText = 'Failed to extract video streams. Ensure the link is a valid public Short.';
+                errorBlock.style.display = 'block';
             });
         }
     </script>
