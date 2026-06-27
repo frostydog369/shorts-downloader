@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { exec } = require('child_process');
+const ytdlp = require('youtube-dl-exec');
 
 const app = express();
 
@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 });
 
 // =======================================================
-// API ROUTE: Fetch Video Details (Zero-Handshake Method)
+// API ROUTE: Fetch Video Details (Zero-Handshake ID Stripper)
 // =======================================================
 app.post('/api/download', async (req, res) => {
     const { url } = req.body;
@@ -24,7 +24,7 @@ app.post('/api/download', async (req, res) => {
 
     let videoId = '';
     
-    // Cleanly isolate the 11-character video ID entirely on the backend text layer
+    // Parse the URL strings instantly on the text layer to avoid network overhead
     if (url.includes('shorts/')) {
         videoId = url.split('shorts/')[1]?.split('?')[0]?.split('&')[0];
     } else if (url.includes('v=')) {
@@ -37,8 +37,7 @@ app.post('/api/download', async (req, res) => {
         return res.status(400).json({ error: 'Could not extract a valid YouTube Video ID.' });
     }
 
-    // Instantly return the structured token layout back to the frontend
-    // This entirely avoids hitting YouTube's network during the initial check phase
+    // Instantly pass the structure back to make the frontend green download button show up
     res.json({
         success: true,
         videoId: videoId,
@@ -47,7 +46,7 @@ app.post('/api/download', async (req, res) => {
 });
 
 // =======================================================
-// API ROUTE: Live Stream/Download Payload Delivery
+// API ROUTE: Live Stream Delivery (Crash-Resistant Native Code)
 // =======================================================
 app.get('/api/stream', (req, res) => {
     const videoId = req.query.id;
@@ -58,28 +57,38 @@ app.get('/api/stream', (req, res) => {
 
     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
+    // Format secure download attachment frames
     res.setHeader('Content-Disposition', `attachment; filename="ShortsFast-${videoId}.mp4"`);
     res.setHeader('Content-Type', 'video/mp4');
 
-    // Execute via direct shell spawning using an Android client emulation flag
-    // The 'android' extractor profile bypasses standard data center fingerprint signatures entirely
-    const command = `npx youtube-dl-exec "${videoUrl}" --format "best[ext=mp4]" --extractor-args "youtube:player_client=android" --output "-" --no-warnings --no-check-certificates`;
+    try {
+        // FIXED: Using native .exec function wrapper instead of shell command execution string strings
+        // This avoids spawning massive shell wrappers and keeps Render's memory footprint incredibly small
+        const downloaderProcess = ytdlp.exec(videoUrl, {
+            format: 'best[ext=mp4]',
+            output: '-',
+            noWarnings: true,
+            noCheckCertificates: true,
+            // Keeps the crucial mobile app player emulation protocol to slice past YouTube's IP filters
+            extractorArgs: 'youtube:player_client=android'
+        });
 
-    const child = exec(command, { maxBuffer: 1024 * 1024 * 10 });
+        // Safe stream plumbing directly down the user response pipe
+        downloaderProcess.stdout.pipe(res);
 
-    // Stream the data directly to the client's browser response
-    child.stdout.pipe(res);
+        downloaderProcess.on('error', (err) => {
+            console.error('Streaming pipeline error:', err.message);
+            if (!res.headersSent) {
+                res.status(500).send('Media synchronization pipeline failed.');
+            }
+        });
 
-    child.stderr.on('data', (data) => {
-        console.error(`Streaming Process Output: ${data}`);
-    });
-
-    child.on('error', (err) => {
-        console.error('Streaming connection pipeline failed:', err.message);
+    } catch (streamError) {
+        console.error('Process Execution Failure:', streamError.message);
         if (!res.headersSent) {
-            res.status(500).send('Media synchronization pipeline failed.');
+            res.status(500).send('Backend engine interface failed.');
         }
-    });
+    }
 });
 
 const PORT = process.env.PORT || 3000;
