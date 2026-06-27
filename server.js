@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const ytdlp = require('youtube-dl-exec');
+const ytdl = require('@distube/ytdl-core');
 
 const app = express();
 
@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 });
 
 // =======================================================
-// API ROUTE: Fetch Video Details (Zero-Handshake ID Stripper)
+// API ROUTE: Fetch Video Details (Ultra-Lightweight Text Layer)
 // =======================================================
 app.post('/api/download', async (req, res) => {
     const { url } = req.body;
@@ -24,7 +24,7 @@ app.post('/api/download', async (req, res) => {
 
     let videoId = '';
     
-    // Parse the URL strings instantly on the text layer to avoid network overhead
+    // Instantly extract the 11-character video ID from the URL string text
     if (url.includes('shorts/')) {
         videoId = url.split('shorts/')[1]?.split('?')[0]?.split('&')[0];
     } else if (url.includes('v=')) {
@@ -37,7 +37,7 @@ app.post('/api/download', async (req, res) => {
         return res.status(400).json({ error: 'Could not extract a valid YouTube Video ID.' });
     }
 
-    // Instantly pass the structure back to make the frontend green download button show up
+    // Instantly send back success to open up the frontend green button layout
     res.json({
         success: true,
         videoId: videoId,
@@ -46,9 +46,9 @@ app.post('/api/download', async (req, res) => {
 });
 
 // =======================================================
-// API ROUTE: Live Stream Delivery (Crash-Resistant Native Code)
+// API ROUTE: Safe Native JavaScript Streaming Pipe
 // =======================================================
-app.get('/api/stream', (req, res) => {
+app.get('/api/stream', async (req, res) => {
     const videoId = req.query.id;
 
     if (!videoId) {
@@ -57,34 +57,25 @@ app.get('/api/stream', (req, res) => {
 
     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
-    // Format secure download attachment frames
+    // Set download attachment headers
     res.setHeader('Content-Disposition', `attachment; filename="ShortsFast-${videoId}.mp4"`);
     res.setHeader('Content-Type', 'video/mp4');
 
     try {
-        // FIXED: Using native .exec function wrapper instead of shell command execution string strings
-        // This avoids spawning massive shell wrappers and keeps Render's memory footprint incredibly small
-        const downloaderProcess = ytdlp.exec(videoUrl, {
-            format: 'best[ext=mp4]',
-            output: '-',
-            noWarnings: true,
-            noCheckCertificates: true,
-            // Keeps the crucial mobile app player emulation protocol to slice past YouTube's IP filters
-            extractorArgs: 'youtube:player_client=android'
-        });
-
-        // Safe stream plumbing directly down the user response pipe
-        downloaderProcess.stdout.pipe(res);
-
-        downloaderProcess.on('error', (err) => {
-            console.error('Streaming pipeline error:', err.message);
-            if (!res.headersSent) {
-                res.status(500).send('Media synchronization pipeline failed.');
+        // Stream natively using pure JavaScript streams without spawning heavy Linux binaries
+        // This keeps RAM usage incredibly low to prevent Render server memory crashes
+        ytdl(videoUrl, {
+            format: 'mp4',
+            quality: 'highestvideo',
+            requestOptions: {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+                }
             }
-        });
+        }).pipe(res);
 
     } catch (streamError) {
-        console.error('Process Execution Failure:', streamError.message);
+        console.error('Native Stream Error:', streamError.message);
         if (!res.headersSent) {
             res.status(500).send('Backend engine interface failed.');
         }
