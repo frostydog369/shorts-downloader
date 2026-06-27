@@ -23,14 +23,14 @@ app.post('/api/download', async (req, res) => {
     }
 
     try {
+        // FIXED: Changed 'cookiefile' to the library's correct 'cookies' configuration property
         const metadata = await ytdlp(url, {
             dumpSingleJson: true,
             noWarnings: true,
             preferFreeFormats: true,
             userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             referer: 'https://www.youtube.com/',
-            // FIXED: Tells yt-dlp to read your uploaded cookie validation token
-            cookiefile: path.join(__dirname, 'cookies.txt')
+            cookies: path.join(__dirname, 'cookies.txt')
         });
 
         const parsedData = typeof metadata === 'string' ? JSON.parse(metadata) : metadata;
@@ -64,14 +64,14 @@ app.get('/api/stream', (req, res) => {
     res.setHeader('Content-Disposition', `attachment; filename="ShortsFast-${videoId}.mp4"`);
     res.setHeader('Content-Type', 'video/mp4');
 
+    // FIXED: Changed 'cookiefile' to 'cookies' here as well
     const downloaderProcess = ytdlp.exec(videoUrl, {
         format: 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
         output: '-',
         noWarnings: true,
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         referer: 'https://www.youtube.com/',
-        // FIXED: Tells the streaming process to use the cookie validation token as well
-        cookiefile: path.join(__dirname, 'cookies.txt')
+        cookies: path.join(__dirname, 'cookies.txt')
     });
 
     downloaderProcess.stdout.pipe(res);
