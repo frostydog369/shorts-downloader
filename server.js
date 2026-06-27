@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { createRunner } = require('youtube-dl-exec');
+// FIXED: Import the core module directly (it handles its own binary paths automatically on Render)
+const ytdlp = require('youtube-dl-exec');
 
 const app = express();
 
@@ -9,11 +10,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Point to where your yt-dlp binary is located
-const ytdlp = createRunner('/usr/bin/yt-dlp');
-
 // =======================================================
-// NEW: SERVE FRONTEND (Fixes the "Not Found" error)
+// SERVE FRONTEND (Fixes the "Not Found" error)
 // =======================================================
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -30,19 +28,18 @@ app.post('/api/download', async (req, res) => {
     }
 
     try {
-        // Fetch metadata safely using yt-dlp simulation flags
+        // FIXED: Fetch metadata safely using the clean module wrapper
         const metadata = await ytdlp(url, {
             dumpSingleJson: true,
             noWarnings: true,
             preferFreeFormats: true,
         });
 
-        // Parse structural tracking parameters safely
-        const parsedData = JSON.parse(metadata);
+        // Parse structural parameters safely (handles both stringified and object responses)
+        const parsedData = typeof metadata === 'string' ? JSON.parse(metadata) : metadata;
         
         if (!parsedData.id) throw new Error('Could not resolve video tracking layout identifiers.');
 
-        // Respond with data parameters needed for structural frontend matching
         res.json({
             success: true,
             videoId: parsedData.id,
