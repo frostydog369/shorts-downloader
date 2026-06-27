@@ -1,18 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-// Import the core module directly (it handles its own binary paths automatically on Render)
 const ytdlp = require('youtube-dl-exec');
 
 const app = express();
 
-// Enable Cross-Origin Requests and JSON parsing
 app.use(cors());
 app.use(express.json());
 
-// =======================================================
-// SERVE FRONTEND (Fixes the "Not Found" error)
-// =======================================================
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -28,16 +23,16 @@ app.post('/api/download', async (req, res) => {
     }
 
     try {
-        // FIXED: Added User-Agent and Referer to bypass YouTube's data center blocks
         const metadata = await ytdlp(url, {
             dumpSingleJson: true,
             noWarnings: true,
             preferFreeFormats: true,
             userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            referer: 'https://www.youtube.com/'
+            referer: 'https://www.youtube.com/',
+            // FIXED: Tells yt-dlp to read your uploaded cookie validation token
+            cookiefile: path.join(__dirname, 'cookies.txt')
         });
 
-        // Parse structural parameters safely (handles both stringified and object responses)
         const parsedData = typeof metadata === 'string' ? JSON.parse(metadata) : metadata;
         
         if (!parsedData.id) throw new Error('Could not resolve video tracking layout identifiers.');
@@ -66,20 +61,19 @@ app.get('/api/stream', (req, res) => {
 
     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
-    // Format secure inline transmission attachment headers
     res.setHeader('Content-Disposition', `attachment; filename="ShortsFast-${videoId}.mp4"`);
     res.setHeader('Content-Type', 'video/mp4');
 
-    // FIXED: Added identical browser spoofing flags to the streaming execution line
     const downloaderProcess = ytdlp.exec(videoUrl, {
         format: 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
         output: '-',
         noWarnings: true,
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        referer: 'https://www.youtube.com/'
+        referer: 'https://www.youtube.com/',
+        // FIXED: Tells the streaming process to use the cookie validation token as well
+        cookiefile: path.join(__dirname, 'cookies.txt')
     });
 
-    // Pipe layout processing stream directly into client terminal browser response frame
     downloaderProcess.stdout.pipe(res);
 
     downloaderProcess.on('error', (err) => {
@@ -90,8 +84,5 @@ app.get('/api/stream', (req, res) => {
     });
 });
 
-// =======================================================
-// LIVE PORT MONITORING CONFIGURATION (Render Production Ready)
-// =======================================================
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Stable backend running on port ${PORT}`));
